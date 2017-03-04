@@ -2,6 +2,9 @@
 
 import React, { Component, PropTypes } from 'react';
 
+import FlatButton from 'material-ui/FlatButton';
+import TodoView from 'components/TodoView';
+
 import styles from './styles.scss';
 
 export default class TodoDetail extends Component {
@@ -16,12 +19,9 @@ export default class TodoDetail extends Component {
     params: {},
   }
 
-//   static contextTypes = {
-//     NotificationManager: PropTypes.object.isRequired,
-//     router: PropTypes.object.isRequired,
-//     store: PropTypes.object.isRequired,
-//     debug: PropTypes.func.isRequired,
-//   }
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  }
 
   state = {
     loading: false,
@@ -46,8 +46,17 @@ export default class TodoDetail extends Component {
 
     return (
       <div className={styles.container}>
-        TODO View detail
+        <FlatButton
+          onTouchTap={this.goBack}
+        >
+            Go back
+        </FlatButton>
+        <TodoView />
       </div>
     );
+  }
+
+  goBack = () => {
+    this.context.router.push('/');
   }
 }

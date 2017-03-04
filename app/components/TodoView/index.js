@@ -16,12 +16,9 @@ export default class TodoView extends Component {
     params: {},
   }
 
-//   static contextTypes = {
-//     NotificationManager: PropTypes.object.isRequired,
-//     router: PropTypes.object.isRequired,
-//     store: PropTypes.object.isRequired,
-//     debug: PropTypes.func.isRequired,
-//   }
+  static contextTypes = {
+    router: PropTypes.object.isRequired,
+  }
 
   state = {
     loading: false,

@@ -4,7 +4,7 @@
 
 import React, { Component, PropTypes } from 'react';
 import TodoList from 'components/TodoList';
-import IconButton from 'material-ui/IconButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
@@ -92,13 +92,14 @@ export default class Home extends Component {
     return (
       <div className={styles.container}>
         <div className={styles.addButtonContainer}>
-          <IconButton
+          <FloatingActionButton
             tooltip="Add note"
-            tooltipPosition="bottom-center"
             onTouchTap={this.onAddNote}
+            mini
+            secondary
           >
             <ContentAdd />
-          </IconButton>
+          </FloatingActionButton>
         </div>
 
         <Tabs>
