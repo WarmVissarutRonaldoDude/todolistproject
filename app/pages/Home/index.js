@@ -29,6 +29,23 @@ export default class Home extends Component {
 
   state = {
     openAddNote: false,
+    windowHeight: window.innerHeight,
+  }
+
+  componentWillMount() {
+    window.addEventListener('resize', this.onComponentResize);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.onComponentResize);
+  }
+
+  onComponentResize = () => {
+    if (window.innerHeight !== this.state.windowHeight) {
+      this.setState({
+        windowHeight: window.innerHeight,
+      });
+    }
   }
 
   render() {
@@ -89,18 +106,21 @@ export default class Home extends Component {
               <TodoList
                 listData={tableData}
                 onTouchList={this.onTouchList}
+                height={`${this.state.windowHeight - 60}px`}
               />
             </Tab>
             <Tab label="Completed" >
               <TodoList
                 listData={[]}
                 onTouchList={this.onTouchList}
+                height={`${this.state.windowHeight - 60}px`}
               />
             </Tab>
             <Tab label="Active">
               <TodoList
                 listData={tableData}
                 onTouchList={this.onTouchList}
+                height={`${this.state.windowHeight - 60}px`}
               />
             </Tab>
         </Tabs>
