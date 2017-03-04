@@ -4,7 +4,7 @@ import React, { Component, PropTypes } from 'react';
 
 import styles from './styles.scss';
 
-export default class TodoView extends Component {
+export default class TodoDetail extends Component {
 
   static propTypes = {
     children: PropTypes.node,
@@ -46,7 +46,7 @@ export default class TodoView extends Component {
 
     return (
       <div className={styles.container}>
-        TODO View
+        TODO View detail
       </div>
     );
   }

@@ -20,7 +20,9 @@ import {
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import CircularProgress from 'material-ui/CircularProgress';
 
+
 // routes
+import TodoDetail from 'pages/TodoDetail';
 import Error404 from 'pages/Error404';
 import Home from 'pages/Home';
 import LayoutRoot from 'layouts/LayoutRoot';
@@ -144,6 +146,7 @@ export default class App extends Component {
         <Route path="/" component={LayoutRoot}>
           <IndexRedirect to="Home" />
           <Route path="Home" component={Home} />
+          <Route path="TodoDetail/:todoID" component={TodoDetail} />
           <Route path="*" component={Error404} />
         </Route>
       </Router>

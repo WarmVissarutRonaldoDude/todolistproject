@@ -1,9 +1,9 @@
   .container {
-    width: 200;
-    overflow: 'hidden';
-    margin: '20px auto 0';
   }
 
-  .toggleHeader {
-    margin: '20px auto 10px';
+  .addButtonContainer {
+    position: fixed;
+    top: 5px;
+    right: 5px;
+    z-index: 9999;
   }

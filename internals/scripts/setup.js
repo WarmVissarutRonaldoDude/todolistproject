@@ -10,45 +10,24 @@ const animateProgress = require('./helpers/progress');
 const addCheckMark = require('./helpers/checkmark');
 const readline = require('readline');
 
+var interval = null;
+
 process.stdin.resume();
 process.stdin.setEncoding('utf8');
 
 process.stdout.write('\n');
-let interval = animateProgress('Cleaning old repository');
-process.stdout.write('Cleaning old repository');
 
-cleanRepo(function () {
-  clearInterval(interval);
+init();
+
+function init() {
   process.stdout.write('\nInstalling dependencies... (This might take a while)');
   setTimeout(function () {
     readline.cursorTo(process.stdout, 0);
-    interval = animateProgress('Installing dependencies');
+    interval = animateProgress('Installing dependencies... (This might take a while)');
   }, 500);
 
   installDeps();
-});
-
-/**
- * Deletes the .git folder in dir
- */
-function cleanRepo(callback) {
-  // shell.rm('-rf', '.git/');
-  addCheckMark(callback);
 }
-
-/**
- * Initializes git again
- */
-function initGit(callback) {
-  exec('git init && git add . && git commit -m "Initial commit"', addCheckMark.bind(null, callback));
-}
-
-/**
- * Deletes a file in the current directory
- */
-// function deleteFileInCurrentDir(file, callback) {
-//   fs.unlink(path.join(__dirname, file), callback);
-// }
 
 /**
  * Installs dependencies
@@ -75,28 +54,13 @@ function installDeps() {
  */
 function installDepsCallback(error) {
   clearInterval(interval);
-  process.stdout.write('\n\n');
+  process.stdout.write('\n');
   if (error) {
     process.stderr.write(error);
     process.stdout.write('\n');
     process.exit(1);
   }
 
-  interval = animateProgress('Initialising new repository');
-  process.stdout.write('Initialising new repository');
-  initGit(function () {
-    clearInterval(interval);
-    process.stdout.write('\nDone!');
-    process.exit(0);
-  });
-
-//   deleteFileInCurrentDir('setup.js', function () {
-//     interval = animateProgress('Initialising new repository');
-//     process.stdout.write('Initialising new repository');
-//     initGit(function () {
-//       clearInterval(interval);
-//       process.stdout.write('\nDone!');
-//       process.exit(0);
-//     });
-//   });
+  process.stdout.write('\nDone!\n');
+  process.exit(0);
 }
