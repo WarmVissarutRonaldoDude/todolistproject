@@ -8,6 +8,7 @@ export default class Note {
     title: 'string',
     description: 'string',
     date: 'object',
+    complete: 'bool',
   };
 
   // Property
@@ -15,6 +16,7 @@ export default class Note {
   title = '';
   description = '';
   date = new Date();
+  complete = false;
 
   constructor(args) {
     this.setAllValue(args);

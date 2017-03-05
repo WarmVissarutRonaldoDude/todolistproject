@@ -113,7 +113,7 @@ export default class TodoList extends Component {
                 <TableRowColumn className={styles.checkboxRow}>
                   <Checkbox onTouchTap={() => { this.onSelectList(row.id); }} />
                 </TableRowColumn>
-                <TableRowColumn onTouchTap={() => { onTouchList(row.id); }}>{row.name}</TableRowColumn>
+                <TableRowColumn onTouchTap={() => { onTouchList(row.id); }}>{row.title}</TableRowColumn>
               </TableRow>
               ))}
           </TableBody>

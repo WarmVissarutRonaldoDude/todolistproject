@@ -110,21 +110,21 @@ export default class Home extends Component {
         <Tabs>
             <Tab label="All" >
               <TodoList
-                listData={tableData}
+                listData={this.getNotes()}
                 onTouchList={this.onTouchList}
                 height={`${this.state.windowHeight - 60}px`}
               />
             </Tab>
             <Tab label="Completed" >
               <TodoList
-                listData={[]}
+                listData={this.getNotes({ filter: 'completed' })}
                 onTouchList={this.onTouchList}
                 height={`${this.state.windowHeight - 60}px`}
               />
             </Tab>
             <Tab label="Active">
               <TodoList
-                listData={tableData}
+                listData={this.getNotes({ filter: 'active' })}
                 onTouchList={this.onTouchList}
                 height={`${this.state.windowHeight - 60}px`}
               />
@@ -159,6 +159,11 @@ export default class Home extends Component {
         </Dialog>
       </div>
     );
+  }
+
+  getNotes(options = {}) {
+    const notes = this.context.store.getNotes(options);
+    return notes;
   }
 
   onTitleChange = (event) => {
