@@ -11,6 +11,8 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import { Tabs, Tab } from 'material-ui/Tabs';
 
+
+
 import styles from './styles.scss';
 
 export default class Home extends Component {
@@ -25,11 +27,14 @@ export default class Home extends Component {
 
   static contextTypes = {
     router: PropTypes.object.isRequired,
+    store: PropTypes.object.isRequired,
   }
 
   state = {
     openAddNote: false,
     windowHeight: window.innerHeight,
+    descriptionText: '',
+    titleText: '',
   }
 
   componentWillMount() {
@@ -93,7 +98,7 @@ export default class Home extends Component {
       <div className={styles.container}>
         <div className={styles.addButtonContainer}>
           <FloatingActionButton
-            tooltip="Add note"
+            id={'addNoteButton'}
             onTouchTap={this.onAddNote}
             mini
             secondary
@@ -134,15 +139,34 @@ export default class Home extends Component {
           onRequestClose={this.handleCloseAddNote}
         >
           <TextField
-            hintText="Note"
+            id={'titleText'}
+            value={this.state.titleText}
+            placeholder="Title"
+            multiLine={false}
+            fullWidth={true}
+            onChange={this.onTitleChange}
+          />
+          <TextField
+            id={'descriptionText'}
+            value={this.state.descriptionText}
+            placeholder="Description"
             multiLine={true}
             rows={1}
             rowsMax={4}
             fullWidth={true}
+            onChange={this.onDescChange}
           />
         </Dialog>
       </div>
     );
+  }
+
+  onTitleChange = (event) => {
+    this.setState({ titleText: event.target.value });
+  }
+
+  onDescChange = (event) => {
+    this.setState({ descriptionText: event.target.value });
   }
 
   getAddNoteButtonActionDialog() {
@@ -166,16 +190,30 @@ export default class Home extends Component {
   handleSubmitAddNote = (e) => {
     e.preventDefault();
 
-    // TODO Add note to storage
+    const Note = {
+      title: this.state.titleText,
+      description: this.state.descriptionText,
+      date: new Date(),
+    };
 
-    this.setState({
-      openAddNote: false,
-    });
+    return this.context.store.addNote(Note)
+        .then(() => {
+          this.setState({
+            openAddNote: false,
+            descriptionText: '',
+            titleText: '',
+          });
+        })
+        .catch((err) => {
+          alert(`Add note error : ${err}`);
+        });
   }
 
   handleCloseAddNote = () => {
     this.setState({
       openAddNote: false,
+      descriptionText: '',
+      titleText: '',
     });
   }
 
@@ -183,6 +221,8 @@ export default class Home extends Component {
     e.preventDefault();
     this.setState({
       openAddNote: true,
+      descriptionText: '',
+      titleText: '',
     });
   }
 

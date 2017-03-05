@@ -26,8 +26,7 @@ import TodoDetail from 'pages/TodoDetail';
 import Error404 from 'pages/Error404';
 import Home from 'pages/Home';
 import LayoutRoot from 'layouts/LayoutRoot';
-
-import DocumentTitle from 'react-document-title';
+import StoreManager from 'store/StoreManager';
 
 import Theme from './theme';
 
@@ -76,6 +75,16 @@ export default class App extends Component {
 //     ekoVoip: new EkoVoipProxy({ client: EkoClientProxy, connection: ConnectionManager }),
 //     FeatureControl,
 //   }
+
+  static childContextTypes = {
+    store: PropTypes.object,
+  }
+
+  getChildContext() {
+    return {
+      store: StoreManager,
+    };
+  }
 
 //   getChildContext() {
 //     return {
