@@ -2,7 +2,7 @@
 <br/>
 Note.
 <br/>
-Using latest react-boiletplate as template
+Using react-boiletplate as code template
 <br/>
 <b>Step to run</b>
 <br/>
