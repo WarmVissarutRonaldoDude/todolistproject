@@ -1,8 +1,7 @@
 /**
  * @class LayoutRoot
  *
- * This component provides the root structure of the webapp and is shared
- * by all routes.
+ * Root Layout
  */
 
 import React, { Component, PropTypes } from 'react';

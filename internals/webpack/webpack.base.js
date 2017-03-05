@@ -1,8 +1,6 @@
 /**
  * @file webpack.base.js
  *
- * Global webpack configuration shared across browser web app and desktop
- * electron app for all environments.
  */
 
 try {

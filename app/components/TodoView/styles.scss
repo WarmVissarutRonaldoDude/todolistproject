@@ -1,0 +1,35 @@
+
+.titleHeader {
+  color: silver;
+  font-weight: 400;
+  text-decoration: underline;
+}
+
+.descriptionHeader {
+  color: silver;
+  font-weight: 400;
+  text-decoration: underline;   
+}
+.date {
+  color: orange;
+}
+
+
+// TODO Fix polish things
+.actionContainer {
+  position: relative;
+  text-align: right;
+}
+
+.statusHeader {
+  color: silver;
+  font-weight: 400;
+  text-decoration: underline;    
+}
+
+.statusComplete {
+  color: #02C00A;
+}
+.statusActive {
+  color: orange;
+}

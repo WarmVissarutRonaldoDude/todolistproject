@@ -4,19 +4,12 @@
  * - TODO Should store with nedb but quite lazy todo for now
  */
 
-import { EventEmitter } from 'events';
-
 import Note from 'models/Note';
 
-import _ from 'lodash';
 const uuidV4 = require('uuid/v4');
 
 
-class StoreManager extends EventEmitter {
-
-  constructor() {
-    super();
-  }
+class StoreManager {
 
   addNote(noteModel) {
     return new Promise((resolve) => {
@@ -34,14 +27,28 @@ class StoreManager extends EventEmitter {
   }
 
   getNoteById(id) {
-    //TODO
+    const storageKey = `note_${id}`;
+    const note = window.localStorage[storageKey] ?
+     JSON.parse(window.localStorage[storageKey]) : null;
+    return note;
+  }
+
+  deleteNote(id) {
+    return new Promise((resolve, reject) => {
+      const storageKey = `note_${id}`;
+      if (window.localStorage[storageKey]) {
+        delete window.localStorage[storageKey];
+        return resolve();
+      }
+
+      return reject('no note object in storage');
+    });
   }
 
   /*
     options can be like filter: complete, active
   */
   getNotes(options = {}) {
-    // TODO defaults is all
     const notes = [];
     Object.entries(window.localStorage).forEach(([key, value]) => {
       if (key.indexOf('note_') === 0) {
@@ -51,7 +58,7 @@ class StoreManager extends EventEmitter {
         // filter if it have
         if (options && options.filter) {
           switch (options.filter) {
-            case 'complete':
+            case 'completed':
               if (notesModel.complete === true) {
                 notes.push(notesModel);
               }
@@ -73,11 +80,40 @@ class StoreManager extends EventEmitter {
   }
 
   updateNote(noteModel) {
-    // TODO
+    return new Promise((resolve, reject) => {
+      const id = noteModel.id;
+      const storageKey = `note_${id}`;
+      let currentStoreLocalStorage = window.localStorage[storageKey] ?
+        JSON.parse(window.localStorage[storageKey]) : null;
+
+      if (!currentStoreLocalStorage) {
+        return reject(`not have reminders id : ${id} in storage`);
+      }
+
+      currentStoreLocalStorage = Object.assign(currentStoreLocalStorage, noteModel);
+
+      window.localStorage[storageKey] = JSON.stringify(currentStoreLocalStorage);
+
+      return resolve(currentStoreLocalStorage);
+    });
   }
 
-  setComplete(isComplete) {
-    // TODO
+  setComplete(id, isComplete) {
+    return new Promise((resolve, reject) => {
+      const storageKey = `note_${id}`;
+      const currentStoreLocalStorage = window.localStorage[storageKey] ?
+        JSON.parse(window.localStorage[storageKey]) : null;
+
+      if (!currentStoreLocalStorage) {
+        return reject(`not have reminders id : ${id} in storage`);
+      }
+
+      currentStoreLocalStorage.complete = isComplete;
+
+      window.localStorage[storageKey] = JSON.stringify(currentStoreLocalStorage);
+
+      return resolve(currentStoreLocalStorage);
+    });
   }
 }
 

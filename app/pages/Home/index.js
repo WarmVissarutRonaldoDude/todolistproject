@@ -1,6 +1,3 @@
-/**
- * 404 error page
- */
 
 import React, { Component, PropTypes } from 'react';
 import TodoList from 'components/TodoList';
@@ -11,7 +8,7 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import { Tabs, Tab } from 'material-ui/Tabs';
 
-
+import _ from 'lodash';
 
 import styles from './styles.scss';
 
@@ -35,6 +32,7 @@ export default class Home extends Component {
     windowHeight: window.innerHeight,
     descriptionText: '',
     titleText: '',
+    disabledSubmitNote: true,
   }
 
   componentWillMount() {
@@ -53,112 +51,65 @@ export default class Home extends Component {
     }
   }
 
-  render() {
-    const tableData = [
-    {
-        id: 1,
-        name: 'John Smith',
-        status: 'Employed',
-        selected: true,
-    },
-    {
-        id: 2,
-        name: 'Randal White',
-        status: 'Unemployed',
-    },
-    {
-        id: 3,
-        name: 'Stephanie Sanders',
-        status: 'Employed',
-        selected: true,
-    },
-    {
-        id: 4,
-        name: 'Steve Brown',
-        status: 'Employed',
-    },
-    {
-        id: 5,
-        name: 'Joyce Whitten',
-        status: 'Employed',
-    },
-    {
-        id: 6,
-        name: 'Samuel Roberts',
-        status: 'Employed',
-    },
-    {
-        id: 7,
-        name: 'Adam Moore',
-        status: 'Employed',
-    },
+  onTitleChange = (event) => {
+    const text = event.target.value;
+
+    // title is required field for submit new note
+    const allowSubmit = text && (_.trim(text)).length;
+
+    this.setState({
+      titleText: text,
+      disabledSubmitNote: !allowSubmit,
+    });
+  }
+
+  onDescChange = (event) => {
+    const text = event.target.value;
+    this.setState({ descriptionText: text });
+  }
+
+  onAddNote = (e) => {
+    e.preventDefault();
+    this.setState({
+      openAddNote: true,
+      descriptionText: '',
+      titleText: '',
+      disabledSubmitNote: true,
+    });
+  }
+
+  onTouchList = (todoID) => {
+    const nextRoute = `/TodoDetail/${todoID}`;
+    this.context.router.push(nextRoute);
+  }
+
+  onSetIsComplete = (todoID, isComplete) => {
+    this.context.store.setComplete(todoID, isComplete)
+      .then(() => {
+        this.forceUpdate();
+      })
+      .catch((err) => {
+        alert(`${err}`);
+      });
+  }
+
+  getAddNoteButtonActionDialog() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary
+        onTouchTap={this.handleCloseAddNote}
+      />,
+      <FlatButton
+        label="Submit"
+        primary
+        keyboardFocused
+        disabled={this.state.disabledSubmitNote}
+        onTouchTap={this.handleSubmitAddNote}
+      />,
     ];
 
-    return (
-      <div className={styles.container}>
-        <div className={styles.addButtonContainer}>
-          <FloatingActionButton
-            id={'addNoteButton'}
-            onTouchTap={this.onAddNote}
-            mini
-            secondary
-          >
-            <ContentAdd />
-          </FloatingActionButton>
-        </div>
-
-        <Tabs>
-            <Tab label="All" >
-              <TodoList
-                listData={this.getNotes()}
-                onTouchList={this.onTouchList}
-                height={`${this.state.windowHeight - 60}px`}
-              />
-            </Tab>
-            <Tab label="Completed" >
-              <TodoList
-                listData={this.getNotes({ filter: 'completed' })}
-                onTouchList={this.onTouchList}
-                height={`${this.state.windowHeight - 60}px`}
-              />
-            </Tab>
-            <Tab label="Active">
-              <TodoList
-                listData={this.getNotes({ filter: 'active' })}
-                onTouchList={this.onTouchList}
-                height={`${this.state.windowHeight - 60}px`}
-              />
-            </Tab>
-        </Tabs>
-
-        <Dialog
-          title="Add Note"
-          actions={this.getAddNoteButtonActionDialog()}
-          modal={false}
-          open={this.state.openAddNote}
-          onRequestClose={this.handleCloseAddNote}
-        >
-          <TextField
-            id={'titleText'}
-            value={this.state.titleText}
-            placeholder="Title"
-            multiLine={false}
-            fullWidth={true}
-            onChange={this.onTitleChange}
-          />
-          <TextField
-            id={'descriptionText'}
-            value={this.state.descriptionText}
-            placeholder="Description"
-            multiLine={true}
-            rows={1}
-            rowsMax={4}
-            fullWidth={true}
-            onChange={this.onDescChange}
-          />
-        </Dialog>
-      </div>
-    );
+    return actions;
   }
 
   getNotes(options = {}) {
@@ -166,30 +117,13 @@ export default class Home extends Component {
     return notes;
   }
 
-  onTitleChange = (event) => {
-    this.setState({ titleText: event.target.value });
-  }
-
-  onDescChange = (event) => {
-    this.setState({ descriptionText: event.target.value });
-  }
-
-  getAddNoteButtonActionDialog() {
-    const actions = [
-      <FlatButton
-        label="Cancel"
-        primary={true}
-        onTouchTap={this.handleCloseAddNote}
-      />,
-      <FlatButton
-        label="Submit"
-        primary={true}
-        keyboardFocused={true}
-        onTouchTap={this.handleSubmitAddNote}
-      />,
-    ];
-
-    return actions;
+  handleCloseAddNote = () => {
+    this.setState({
+      openAddNote: false,
+      descriptionText: '',
+      titleText: '',
+      disabledSubmitNote: true,
+    });
   }
 
   handleSubmitAddNote = (e) => {
@@ -207,6 +141,7 @@ export default class Home extends Component {
             openAddNote: false,
             descriptionText: '',
             titleText: '',
+            disabledSubmitNote: true,
           });
         })
         .catch((err) => {
@@ -214,25 +149,74 @@ export default class Home extends Component {
         });
   }
 
-  handleCloseAddNote = () => {
-    this.setState({
-      openAddNote: false,
-      descriptionText: '',
-      titleText: '',
-    });
-  }
+  render() {
+    return (
+      <div className={styles.container}>
+        <div className={styles.addButtonContainer}>
+          <FloatingActionButton
+            id={'addNoteButton'}
+            onTouchTap={this.onAddNote}
+            mini
+            secondary
+          >
+            <ContentAdd />
+          </FloatingActionButton>
+        </div>
 
-  onAddNote = (e) => {
-    e.preventDefault();
-    this.setState({
-      openAddNote: true,
-      descriptionText: '',
-      titleText: '',
-    });
-  }
+        <Tabs>
+          <Tab label="All" >
+            <TodoList
+              listData={this.getNotes()}
+              onTouchList={this.onTouchList}
+              onSetIsComplete={this.onSetIsComplete}
+              height={`${this.state.windowHeight - 60}px`}
+            />
+          </Tab>
+          <Tab label="Completed" >
+            <TodoList
+              listData={this.getNotes({ filter: 'completed' })}
+              onTouchList={this.onTouchList}
+              onSetIsComplete={this.onSetIsComplete}
+              height={`${this.state.windowHeight - 60}px`}
+            />
+          </Tab>
+          <Tab label="Active">
+            <TodoList
+              listData={this.getNotes({ filter: 'active' })}
+              onTouchList={this.onTouchList}
+              onSetIsComplete={this.onSetIsComplete}
+              height={`${this.state.windowHeight - 60}px`}
+            />
+          </Tab>
+        </Tabs>
 
-  onTouchList = (listID) => {
-    const nextRoute = `/TodoDetail/${listID}`;
-    this.context.router.push(nextRoute);
+        <Dialog
+          title="Add Note"
+          actions={this.getAddNoteButtonActionDialog()}
+          modal={false}
+          open={this.state.openAddNote}
+          onRequestClose={this.handleCloseAddNote}
+        >
+          <TextField
+            id={'titleText'}
+            value={this.state.titleText}
+            placeholder="Title"
+            multiLine={false}
+            fullWidth
+            onChange={this.onTitleChange}
+          />
+          <TextField
+            id={'descriptionText'}
+            value={this.state.descriptionText}
+            placeholder="Description"
+            multiLine
+            rows={1}
+            rowsMax={4}
+            fullWidth
+            onChange={this.onDescChange}
+          />
+        </Dialog>
+      </div>
+    );
   }
 }

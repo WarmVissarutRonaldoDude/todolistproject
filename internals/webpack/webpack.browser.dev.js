@@ -36,7 +36,6 @@ module.exports = merge.smart(base, {
             'lodash',
             'transform-decorators-legacy',
           ],
-          // TODO: EkoQuery causing weird compact issues
           compact: 'auto',
           cacheDirectory: true,
           // enable babel hot module reloading

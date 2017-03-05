@@ -35,14 +35,6 @@ module.exports = merge.smart(base, {
     ],
   },
 
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        DEBUG_CACHE: JSON.stringify('true'),
-      },
-    }),
-  ],
-
   // Some node_modules pull in Node-specific dependencies.
   // Since we're running in a browser we have to stub them out. See:
   // https://webpack.github.io/docs/configuration.html#node
@@ -65,5 +57,3 @@ module.exports = merge.smart(base, {
 
   devtool: 'inline-source-map',
 });
-
-// console.dir(module.exports, { depth: null, colors: true })

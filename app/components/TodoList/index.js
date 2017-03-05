@@ -2,10 +2,8 @@
 
 import React, { Component, PropTypes } from 'react';
 
-import {Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn}
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn }
   from 'material-ui/Table';
-import TextField from 'material-ui/TextField';
-import Toggle from 'material-ui/Toggle';
 import Checkbox from 'material-ui/Checkbox';
 
 import styles from './styles.scss';
@@ -26,6 +24,7 @@ export default class TodoList extends Component {
     // Array data for render
     listData: PropTypes.array.isRequired,
     onTouchList: PropTypes.func.isRequired,
+    onSetIsComplete: PropTypes.func.isRequired,
   }
 
   static defaultProps = {
@@ -42,25 +41,39 @@ export default class TodoList extends Component {
     height: '300px',
   }
 
-//   static contextTypes = {
-//     NotificationManager: PropTypes.object.isRequired,
-//     router: PropTypes.object.isRequired,
-//     store: PropTypes.object.isRequired,
-//     debug: PropTypes.func.isRequired,
-//   }
-
   state = {
     listDataSelect: {},
   }
 
   componentWillMount() {
-    //this._reset(this.props);
+    this.reset(this.props);
   }
 
   componentWillReceiveProps(props) {
-    // if (props.params.todoID !== this.props.params.todoID) {
-    //   this._reset(props);
-    // }
+    this.reset(props);
+  }
+
+  onSelectList(todoId) {
+    const listDataSelect = this.state.listDataSelect || {};
+    listDataSelect[todoId] = !listDataSelect[todoId];
+
+    this.props.onSetIsComplete(todoId, listDataSelect[todoId]);
+
+    this.setState({
+      listDataSelect,
+    });
+  }
+
+  reset(props) {
+    const listDataSelect = {};
+    if (props.listData && props.listData.length) {
+      Object.values(props.listData).forEach((noteModel) => {
+        listDataSelect[noteModel.id] = noteModel.complete;
+      });
+      this.setState({
+        listDataSelect,
+      });
+    }
   }
 
   render() {
@@ -111,7 +124,10 @@ export default class TodoList extends Component {
             {listData.map((row, index) => (
               <TableRow key={index} selected={!!this.state.listDataSelect[row.id]}>
                 <TableRowColumn className={styles.checkboxRow}>
-                  <Checkbox onTouchTap={() => { this.onSelectList(row.id); }} />
+                  <Checkbox
+                    checked={!!this.state.listDataSelect[row.id]}
+                    onTouchTap={() => { this.onSelectList(row.id); }}
+                  />
                 </TableRowColumn>
                 <TableRowColumn onTouchTap={() => { onTouchList(row.id); }}>{row.title}</TableRowColumn>
               </TableRow>
@@ -120,13 +136,5 @@ export default class TodoList extends Component {
         </Table>
       </div>
     );
-  }
-
-  onSelectList(todoId) {
-    const listDataSelect = this.state.listDataSelect || {};
-    listDataSelect[todoId] = !listDataSelect[todoId];
-    this.setState({
-      listDataSelect,
-    });
   }
 }
