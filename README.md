@@ -10,9 +10,11 @@ Using react-boiletplate as code template
 <br/>
 2. npm run setup
 <br/>
-3. npm run start
+3. you can config PORT to run (default is 3000) at .env file (PORT=3000)
 <br/>
-4. access TODO List Web app from browser using localhost:3000
+4. npm run start
+<br/>
+4. access TODO List Web app from browser using localhost:3000 or localhost:configPort
 <br/>
 <br/>
 <b>How To Use Reminder App</b>
